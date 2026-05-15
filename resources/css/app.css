@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply antialiased text-[#1a1832] bg-[#f8f9fc];
+        font-family: 'Outfit', 'Figtree', sans-serif;
+    }
+}
+
+@layer utilities {
+    .gradient-bg {
+        background: linear-gradient(135deg, #f3ebff 0%, #e2d1ff 40%, #ffedf4 100%);
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .fab-shadow {
+        box-shadow: 0 12px 32px rgba(139, 92, 246, 0.25);
+    }
+
+    .premium-input {
+        @apply w-full rounded-2xl border-0 bg-white/50 px-4 py-4 text-[15px] font-semibold text-gray-900 ring-1 ring-gray-200/50 transition-all placeholder:font-medium placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-[#8b5cf6] focus:shadow-lg focus:shadow-[#8b5cf6]/5;
+    }
+
+    .premium-button {
+        @apply w-full bg-[#1a1832] text-white py-4 rounded-2xl font-bold text-[15px] transition-all shadow-xl shadow-[#1a1832]/10 flex justify-center items-center gap-2 hover:bg-black hover:-translate-y-0.5 active:translate-y-0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+}
