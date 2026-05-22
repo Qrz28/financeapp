@@ -52,6 +52,53 @@
                 <h3 class="text-2xl font-bold {{ $balance < 0 ? 'text-red-500' : 'text-green-500' }}">Rp {{ number_format($balance, 0, ',', '.') }}</h3>
             </div>
         </div>
+
+        <!-- Celengan Virtual Widget (Desktop) -->
+        <div class="mt-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-6">Celengan Virtual Anda</h3>
+            <div class="grid grid-cols-3 gap-6">
+                @forelse($savingsGoals->take(3) as $goal)
+                    @php
+                        $percentage = $goal->target_amount > 0 ? min(100, ($goal->current_amount / $goal->target_amount) * 100) : 0;
+                        $colorMap = [
+                            'purple' => 'from-purple-500 to-indigo-400',
+                            'blue' => 'from-blue-500 to-cyan-400',
+                            'green' => 'from-emerald-500 to-teal-400',
+                            'amber' => 'from-amber-500 to-orange-400',
+                            'rose' => 'from-rose-500 to-pink-400',
+                            'emerald' => 'from-emerald-600 to-green-400',
+                            'cyan' => 'from-cyan-500 to-blue-300'
+                        ];
+                        $fillColor = $colorMap[$goal->color] ?? 'from-purple-500 to-indigo-400';
+                    @endphp
+                    <div class="bg-white rounded-[24px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex items-center gap-4 border border-gray-50">
+                        <!-- Tiny Glassmorphic Jar -->
+                        <div class="relative w-16 h-24 flex-shrink-0">
+                            <!-- Lid -->
+                            <div class="w-8 h-1.5 bg-amber-800 rounded-t-sm mx-auto z-20 relative"></div>
+                            <!-- Jar body -->
+                            <div class="absolute inset-x-1 top-1.5 bottom-0 bg-white/30 border border-white/80 rounded-b-[16px] rounded-t-[4px] shadow-[inset_0_2px_6px_rgba(255,255,255,0.4)] overflow-hidden z-10">
+                                <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t {{ $fillColor }} transition-all duration-1000" style="height: {{ $percentage }}%"></div>
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center z-20 pt-1 text-xl">
+                                {{ $goal->icon }}
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-800 text-sm truncate mb-0.5">{{ $goal->name }}</h4>
+                            <p class="text-[10px] text-gray-400 font-bold mb-1.5">{{ number_format($percentage, 0) }}% Terkumpul</p>
+                            <span class="text-xs font-black text-gray-800 bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100/50">
+                                Rp {{ number_format($goal->current_amount, 0, ',', '.') }}
+                            </span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-3 bg-white rounded-[24px] p-6 text-center shadow-[0_8px_30px_rgba(0,0,0,0.02)] text-sm text-gray-400 font-medium border border-gray-50">
+                        Belum ada celengan aktif. Buat di aplikasi mobile sebelah kanan!
+                    </div>
+                @endforelse
+            </div>
+        </div>
     </div>
 
     <!-- Mobile View on Right Side -->

@@ -33,11 +33,17 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // Chart Data (Expenses by category this month)
+        // Chart Data (Expenses by category this month) - Exclude savings category to keep actual expense data clean
         $chartData = Transaction::where('type', 'expense')
+            ->where('category', '!=', 'savings')
             ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
             ->selectRaw('category, SUM(amount) as total')
             ->groupBy('category')
+            ->get();
+
+        // Get savings goals for the desktop widget
+        $savingsGoals = \App\Models\SavingsGoal::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // Generate simple token for QR login (not signed URL since host changes)
@@ -59,7 +65,8 @@ class DashboardController extends Controller
             'transactionCount',
             'recentTransactions',
             'chartData',
-            'qrUrl'
+            'qrUrl',
+            'savingsGoals'
         ));
     }
 

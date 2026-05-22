@@ -100,7 +100,31 @@ class TransactionController extends Controller
 
     public function destroy($id)
     {
-        Transaction::find($id)->delete();
+        $transaction = Transaction::findOrFail($id);
+
+        // Jika transaksi terikat dengan Celengan, sesuaikan saldo celengan tersebut
+        if ($transaction->savings_goal_id) {
+            $goal = $transaction->savingsGoal;
+            if ($goal) {
+                if ($transaction->type === 'expense') {
+                    // Dihapus transaksi Menabung -> Kurangi isi celengan
+                    $goal->current_amount = max(0, $goal->current_amount - $transaction->amount);
+                } elseif ($transaction->type === 'income') {
+                    // Dihapus transaksi Pencairan -> Tambah kembali isi celengan
+                    $goal->current_amount += $transaction->amount;
+                }
+
+                // Perbarui status celengan
+                if ($goal->current_amount >= $goal->target_amount) {
+                    $goal->status = 'completed';
+                } else {
+                    $goal->status = 'active';
+                }
+                $goal->save();
+            }
+        }
+
+        $transaction->delete();
         return redirect('/transactions')->with('success', 'Transaksi berhasil dihapus');
     }
 

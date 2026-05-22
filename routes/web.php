@@ -21,6 +21,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('transactions', TransactionController::class);
 
+    Route::resource('savings', \App\Http\Controllers\SavingsGoalController::class);
+    Route::post('/savings/{goal}/add', [\App\Http\Controllers\SavingsGoalController::class, 'addFunds'])->name('savings.add');
+    Route::post('/savings/{goal}/withdraw', [\App\Http\Controllers\SavingsGoalController::class, 'withdrawFunds'])->name('savings.withdraw');
+
 });
 
 require __DIR__.'/auth.php';
